@@ -19,3 +19,5 @@ velopert 님의 '리액트를 다루는 기술' 연습을 위한 repo.
 koa 프레임워크에 대한 내용을 학습하고 velog에 글을 게재하였다. 자세한 글은 
 https://velog.io/@kandy1002/Koa-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC-%EC%A0%91%ED%95%98%EA%B8%B0 
 에서!
+
+추가적으로 CRUD에 대한 구현중... postman으로 정확하게 다시 실현해보자!
