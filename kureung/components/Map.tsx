@@ -1,4 +1,6 @@
 import { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { markerPosition } from '../pages/store/state';
 
 export interface MapProps {
     latitude: number;
@@ -13,28 +15,11 @@ export interface MapProps {
  */
 
 export default function Map({ latitude, longitude}: MapProps) {
+    const [mark, setMarkerPosition] = useRecoilState(markerPosition);
     useEffect(() => {
         const mapScript = document.createElement("script");
         mapScript.async = true;
         mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_APP_KEY}&autoload=false`;
-        const positions = [
-            {
-                title: '카카오', 
-                latlng: window.kakao && new window.kakao.maps.LatLng(33.450705, 126.570677)
-            },
-            {
-                title: '생태연못', 
-                latlng: window.kakao && new window.kakao.maps.LatLng(33.450936, 126.569477)
-            },
-            {
-                title: '텃밭', 
-                latlng: window.kakao && new window.kakao.maps.LatLng(33.450879, 126.569940)
-            },
-            {
-                title: '근린공원',
-                latlng: window.kakao && new window.kakao.maps.LatLng(33.451393, 126.570738)
-            }
-        ];
         document.head.appendChild(mapScript);
 
         const onLoadKakaoMap = () => {
@@ -44,15 +29,17 @@ export default function Map({ latitude, longitude}: MapProps) {
                     center: new window.kakao.maps.LatLng(latitude, longitude),
                 };
                 const map = new window.kakao.maps.Map(container, options);
-                const markerPosition = new window.kakao.maps.LatLng(latitude, longitude);
-                for(let i = 0; i < positions.length; i++) {
+                for(let i = 0; i < mark.length; i++) {
+                    const position = new window.kakao.maps.LatLng(mark[i].latlng[0], mark[i].latlng[1]);
                     const marker = new window.kakao.maps.Marker({
-                        position: positions[i].latlng,
+                        position,
                     });
                     marker.setMap(map);
                 }
                 window.kakao.maps.event.addListener(map, "click", (mouseEvent: any) => {
                     console.log(mouseEvent);
+                    setMarkerPosition(prev => [...prev, {latlng: [mouseEvent.latLng.Ma, mouseEvent.latLng.La]}]);
+                    console.log(mark);
                 });
             });
         };
@@ -60,7 +47,7 @@ export default function Map({ latitude, longitude}: MapProps) {
         mapScript.addEventListener("load", onLoadKakaoMap);
 
         return () => mapScript.removeEventListener("load", onLoadKakaoMap);
-    }, [latitude, longitude]);
+    }, [latitude, longitude, mark]);
     
     return (
         <>
