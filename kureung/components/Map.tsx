@@ -41,14 +41,19 @@ export default function Map({ latitude, longitude}: MapProps) {
                     setMarkerPosition(prev => [...prev, {latlng: [mouseEvent.latLng.Ma, mouseEvent.latLng.La]}]);
                     console.log(mark);
                 });
+                // const ps = new window.kakao.maps.services.Places();
+                // ps.keywordSearch("이태원 맛집", ({data, status, _pagination}: any) => {
+                //     if(status === window.kakao.maps.services.Status.OK) {
+                //         console.log(data)
+                //     }
+                // })
             });
         };
-
         mapScript.addEventListener("load", onLoadKakaoMap);
 
         return () => mapScript.removeEventListener("load", onLoadKakaoMap);
     }, [latitude, longitude, mark]);
-    
+
     return (
         <>
             <div id="map"></div>
