@@ -1,9 +1,9 @@
 import { atom } from "recoil";
 
-const nameState = atom({
-    key: "nameState",
-    default: "",
-});
+const keyword = atom({
+    key: "keyword",
+    default: ""
+})
 
 const markerPosition = atom({
     key: "markerPosition",
@@ -23,4 +23,4 @@ const markerPosition = atom({
     ]
 })
 
-export { nameState, markerPosition };
+export { keyword, markerPosition };

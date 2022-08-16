@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { markerPosition } from '../pages/store/state';
+import { keyword, markerPosition } from '../pages/store/state';
 
 export interface MapProps {
     latitude: number;
@@ -19,7 +19,7 @@ export default function Map({ latitude, longitude}: MapProps) {
     useEffect(() => {
         const mapScript = document.createElement("script");
         mapScript.async = true;
-        mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_APP_KEY}&autoload=false`;
+        mapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_APP_KEY}&autoload=false&libraries=services`;
         document.head.appendChild(mapScript);
 
         const onLoadKakaoMap = () => {
@@ -29,6 +29,18 @@ export default function Map({ latitude, longitude}: MapProps) {
                     center: new window.kakao.maps.LatLng(latitude, longitude),
                 };
                 const map = new window.kakao.maps.Map(container, options);
+                window.kakao.maps.event.addListener(map, "click", (mouseEvent: any) => {
+                    setMarkerPosition(prev => [...prev, {latlng: [mouseEvent.latLng.Ma, mouseEvent.latLng.La]}]);
+                });
+                const ps = new window.kakao.maps.services.Places();
+                ps.keywordSearch("이태원", (data: any, status: any, _pagination: any) => {
+                    if (status === window.kakao.maps.services.Status.OK) {
+                        for(let i = 0; i < data.length; i++) {
+                            setMarkerPosition(prev => [...prev, {latlng: [Number(data[i].y), Number(data[i].x)]}]);
+                            console.log(mark);
+                        }
+                    }
+                });
                 for(let i = 0; i < mark.length; i++) {
                     const position = new window.kakao.maps.LatLng(mark[i].latlng[0], mark[i].latlng[1]);
                     const marker = new window.kakao.maps.Marker({
@@ -36,23 +48,12 @@ export default function Map({ latitude, longitude}: MapProps) {
                     });
                     marker.setMap(map);
                 }
-                window.kakao.maps.event.addListener(map, "click", (mouseEvent: any) => {
-                    console.log(mouseEvent);
-                    setMarkerPosition(prev => [...prev, {latlng: [mouseEvent.latLng.Ma, mouseEvent.latLng.La]}]);
-                    console.log(mark);
-                });
-                // const ps = new window.kakao.maps.services.Places();
-                // ps.keywordSearch("이태원 맛집", ({data, status, _pagination}: any) => {
-                //     if(status === window.kakao.maps.services.Status.OK) {
-                //         console.log(data)
-                //     }
-                // })
             });
         };
         mapScript.addEventListener("load", onLoadKakaoMap);
 
         return () => mapScript.removeEventListener("load", onLoadKakaoMap);
-    }, [latitude, longitude, mark]);
+    }, []);
 
     return (
         <>
