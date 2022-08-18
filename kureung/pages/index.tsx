@@ -1,14 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Map from '../components/Map';
-import { keyword } from './store/state';
 import { useRecoilState } from 'recoil';
 
 const Home: NextPage = () => {
-  const [key, setKeyword] = useRecoilState(keyword);
-  const onClick = () => {
-
-  }
   return (
     <div style={{ position : 'relative' }}>
       <Head>

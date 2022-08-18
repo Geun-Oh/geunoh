@@ -1,9 +1,16 @@
 import { atom } from "recoil";
+import Map from "../../components/Map";
 
-const keyword = atom({
-    key: "keyword",
-    default: ""
-})
+const overlayProps = atom({
+    key: "overlayProps",
+    default: [
+        {
+            value: "고려대",
+            description: "제가 머무는 곳입니다.",
+            latlng: [37.588194705681, 127.03402453668]
+        }
+    ],
+});
 
 const markerPosition = atom({
     key: "markerPosition",
@@ -23,4 +30,4 @@ const markerPosition = atom({
     ]
 })
 
-export { keyword, markerPosition };
+export { overlayProps, markerPosition };

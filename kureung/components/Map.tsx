@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { keyword, markerPosition } from '../pages/store/state';
+import { overlayProps, markerPosition } from '../pages/store/state';
+import Overlay from './Overlay';
+import ReactDOM from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 
 export interface MapProps {
     latitude: number;
@@ -16,6 +19,7 @@ export interface MapProps {
 
 export default function Map({ latitude, longitude}: MapProps) {
     const [mark, setMarkerPosition] = useRecoilState(markerPosition);
+    const [overlay, setOverlayProps] = useRecoilState(overlayProps);
     useEffect(() => {
         const mapScript = document.createElement("script");
         mapScript.async = true;
@@ -48,6 +52,15 @@ export default function Map({ latitude, longitude}: MapProps) {
                     });
                     marker.setMap(map);
                 }
+                for(let i = 0; i < overlay.length; i++) {
+                    const position = new window.kakao.maps.LatLng(overlay[i].latlng[0], overlay[i].latlng[1]);
+                    const content = renderToString(<Overlay value={overlay[i].value} description={overlay[i].description} />);
+                    const customOverlay = new window.kakao.maps.CustomOverlay({
+                        position,
+                        content,
+                    });
+                    customOverlay.setMap(map);
+                }
             });
         };
         mapScript.addEventListener("load", onLoadKakaoMap);
@@ -68,3 +81,5 @@ export default function Map({ latitude, longitude}: MapProps) {
         </>
     )
 }
+
+// <Overlay value={overlay[i].value} description={overlay[i].description} />

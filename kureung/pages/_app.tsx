@@ -12,8 +12,8 @@ declare global {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return   <RecoilRoot>
-      <Component {...pageProps} />
+  return <RecoilRoot>
+    <Component {...pageProps} />
   </RecoilRoot>
 }
 
