@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { overlayProps, markerPosition } from '../pages/store/state';
 import Overlay from './Overlay';
-import ReactDOM from 'react-dom/client';
 import { renderToString } from 'react-dom/server';
 
 export interface MapProps {

@@ -83,3 +83,11 @@ branch 분리도 하자..! 물론 release가 시작되고 나면 말이다!
 
 무친...react-dom/server를 통해서 가져온  renderToString 메소드를 이용하면 JSX Element를 string으로 바꿔서 사용할 수 있다!!
 이건 SSR에서 사용되기 좋아보인다. 대체로 Node 서버에서 사용된다고 하니, 잘 알아두자!
+
+### 22.08.21
+
+renderToString을 통해 서버에서 컴포넌트를 불러와 렌더링하는 것은 좋았지만, css적용하는게 여간 쉬운 일이 아니다.
+
+styled-components 나 emotion 모두 다 추가적인 설정이 필요한건지...좀 더 공부해 볼 필요가 있다.
+
+일단 css를 그냥 style 속성으로 작성하는 방식 말고는 생각이 안 난다...!

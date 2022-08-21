@@ -1,3 +1,5 @@
+import styled from '@emotion/styled';
+
 interface OverlayProps {
     value: string;
     description: string;
@@ -6,19 +8,19 @@ interface OverlayProps {
 export default function Overlay({ value, description }: OverlayProps) {
     return (
         <>
-            <div className='overlayWrapper'>
-                <h1>{value}</h1>
+            <OverlayWrapper className='overlayWrapper'>
+                <p>{value}</p>
                 <span>{description}</span>
-            </div>
-            <style jsx>{`
-            .overlayWrapper {
-                width: 100px;
-                height: 100px;
-                display: flex;
-                justify-contene: center;
-                align-items: center;
-            }
-        `}</style>
+            </OverlayWrapper>
         </>
     )
 }
+
+const OverlayWrapper = styled('div')({
+    height: "100px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#616161",
+    color: "white",
+})
