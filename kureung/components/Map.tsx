@@ -80,5 +80,3 @@ export default function Map({ latitude, longitude}: MapProps) {
         </>
     )
 }
-
-// <Overlay value={overlay[i].value} description={overlay[i].description} />
