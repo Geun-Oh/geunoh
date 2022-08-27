@@ -1,6 +1,11 @@
 "use strict";
-function calculateLength(v) {
-    return Math.sqrt(v.x * v.x + v.y * v.y);
-}
-var v = { x: 4, y: 3, name: "OH" };
-console.log(calculateLength(v));
+var C = /** @class */ (function () {
+    function C(foo) {
+        this.foo = foo;
+    }
+    C.prototype.abs = function () { };
+    return C;
+}());
+var c = new C("instance of C");
+var d = { foo: "object literal", abs: function () { } };
+console.log(d instanceof C);

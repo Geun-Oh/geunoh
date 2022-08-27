@@ -1,17 +1,6 @@
-interface Vector2D {
-    x: number
-    y: number
-}
+type m = string | Date
+type n = string | number
 
-function calculateLength(v: Vector2D) {
-    return Math.sqrt(v.x * v.x + v.y * v.y)
-}
-
-interface NamedVector {
-    name: string
-    x: number
-    y: number
-}
-
-const v: NamedVector = { x: 4, y: 3, name: "OH" }
-console.log(calculateLength(v))
+type T = Exclude<m, n>
+type NonZeroNums = Exclude<number, 0> // Type is still just number
+const a: NonZeroNums = 0 // no err
