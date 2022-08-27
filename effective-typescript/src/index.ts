@@ -1,6 +1,11 @@
-type m = string | Date
-type n = string | number
+interface Cylinder {
+    radius: number
+    height: number
+}
 
-type T = Exclude<m, n>
-type NonZeroNums = Exclude<number, 0> // Type is still just number
-const a: NonZeroNums = 0 // no err
+const Cylinder = ({radius, height}: Cylinder) => ({ radius, height })
+function calculateVolume(shape: unknown) {
+    if(shape instanceof Cylinder) {
+        shape.radius
+    }
+}
