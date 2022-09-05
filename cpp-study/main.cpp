@@ -2,19 +2,19 @@
 
 using namespace std;
 
+void hellCPP(int);
+
 int main() {
-    int a = 6;
-    int* b;
 
-    cout << "a의 값" << a << endl;
-    cout << "*b의 값" << *b << endl;
-
-    cout << "a의 주소" << &a << endl;
-    cout << "*b의 주소" << b << endl;
-
-    *b += 1;
-
-    cout << "이제 a의 값은" << a << endl;
-
+    int times;
+    cout << "정수를 입력하십시오. \n";
+    cin >> times;
+    hellCPP(times);
     return 0;
+}
+
+void hellCPP(int n) {
+    for(int i = 0; i < n; i ++) {
+        cout << "Hello, C++!\n";
+    }
 }
