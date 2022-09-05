@@ -12,6 +12,7 @@
     "@chakra-ui/react": "1.8",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
+    "dotenv": "^16.0.2",
     "firebase": "^9.9.4",
     "firebase-admin": "^11.0.1",
     "framer-motion": "^6.5.1",
