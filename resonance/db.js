@@ -1,9 +1,8 @@
 const AWS = require('aws-sdk');
-
 const tableName = 'Resonance-User';
 const key = {
-  accessKeyId: 'AKIAWOUBJ5G447E4P2X4', // 개인 Access key 를 넣어준다.
-  secretAccessKey: 'RacPt8n/zFv/CZBcwanhlgCbAOIFjyQmtSK2rAEL',
+  accessKeyId: '', // 개인 Access key 를 넣어준다.
+  secretAccessKey: '',
   region: 'ap-northeast-2',
 };
 
@@ -30,5 +29,5 @@ const params = {
 };
 
 dynamoDB.get(params, (e, d) => {
-  console.log(d.Item.Age);
+  console.log(d);
 });
