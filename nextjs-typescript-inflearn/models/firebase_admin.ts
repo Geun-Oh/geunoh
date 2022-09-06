@@ -18,21 +18,21 @@ export default class FirebaseAdmin {
     private init = false;
 
     public static getInstance(): FirebaseAdmin {
-        if(FirebaseAdmin.instance === undefined || FirebaseAdmin.instance === null) {
-            FirebaseAdmin.instance = new FirebaseAdmin();
-            FirebaseAdmin.instance.bootstrap();
+        if(FirebaseAdmin.instance === undefined || FirebaseAdmin.instance === null) { // 만일 해당 어드민클래스가 없다면
+            FirebaseAdmin.instance = new FirebaseAdmin(); // 새로 인스턴스를 생성함
+            FirebaseAdmin.instance.bootstrap(); // 인스턴스 내에 있는 bootstrap함수를 실행함
         }
         return FirebaseAdmin.instance;
     }
 
-    private bootstrap(): void {
-        const haveApp = admin.apps.length !== 0;
-        if(haveApp) {
-            this.init = true;
+    private bootstrap(): void { // 환경을 초기화할 때 사용할 메서드
+        const haveApp = admin.apps.length !== 0; // 앱이 등록되어있는지 확인하는 것
+        if(haveApp) { // 앱이 존재한다면
+            this.init = true; // 앱이 초기화되었는지 여부를 true로 만들고 종료
             return;
         }
 
-        const config: Config = {
+        const config: Config = { // 앱이 없다면
             credential: {
                 projectId: process.env.projectId || "",
                 clientEmail: process.env.clientEmail || "",
