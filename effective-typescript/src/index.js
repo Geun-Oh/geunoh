@@ -1,11 +1,22 @@
 "use strict";
-var C = /** @class */ (function () {
-    function C(foo) {
-        this.foo = foo;
+var p = { first: "Jane", last: "Jacobs" };
+var email = function (p, subject, body) {
+    return new Response();
+};
+var Cylinder = /** @class */ (function () {
+    function Cylinder() {
+        this.radius = 1;
+        this.height = 1;
     }
-    C.prototype.abs = function () { };
-    return C;
+    return Cylinder;
 }());
-var c = new C("instance of C");
-var d = { foo: "object literal", abs: function () { } };
-console.log(d instanceof C);
+function calculateVolume(shape) {
+    if (shape instanceof Cylinder) {
+        shape; // It's type is Cylinder!
+        shape.radius; // It's type is number!
+    }
+}
+var type = typeof Cylinder;
+console.log(type);
+var v1 = typeof p;
+var v2 = typeof email;
