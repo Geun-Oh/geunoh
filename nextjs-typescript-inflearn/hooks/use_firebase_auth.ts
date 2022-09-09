@@ -2,6 +2,14 @@ import { GoogleAuthProvider, signInWithPopup, User } from "firebase/auth";
 import { useEffect, useState } from "react"
 import FirebaseClient from "../models/firebase_client";
 import { InAuthUser } from "../models/in_auth_user"
+/**
+ * 전체 흐름을 알아보면
+ * 처음 useFirebaseAuth 함수에서 팝업을 열고 유저 정보를 받아 이를 signInResult에 담아 POST 메서드로 /api/member.add로 보낸다.
+ * member.add 내에 있는 함수인 handler에서는 req를 받아 POST인지를 확인하고 이것이 맞다면 MemberCtrl로 req를 보낸다.
+ * 그러면 Member.Ctrl에서는 req에서 필수적인 uid나 email이 누락되었는지 여부를 확인한 뒤 MemberModel로 넘긴다.
+ * 그러면 MemberModel에서는 최종적으로 유저를 추가한다. add함수에 uid, email, displayName, photoURL을 보내주면
+ * 이를 firebase에 유저 데이터로 추가하여 준다.
+ */
 
 /**firebase 유저 인증 기능을 담은 커스텀 훅. */
 export const useFirebaseAuth = () => {
@@ -10,6 +18,7 @@ export const useFirebaseAuth = () => {
     /**로딩 여부를 담는 변수와 아를 변경하는 함수 */
     const [loading, setLoading] = useState(true);
 
+    /**구글 로그인이 실제로 구현된 함수 */
     const signInWithGoogle = async (): Promise<void> => {
         const provider = new GoogleAuthProvider();
         try {

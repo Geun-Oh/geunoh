@@ -1,18 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import MemberModel from "../models/member/member.model";
+import BadReqError from "./error/bad_request_error";
 
 async function add(req: NextApiRequest, res: NextApiResponse) {
   const { uid, email, displayName, photoURL } = req.body;
   if (uid === undefined || uid === null) {
-    return res
-      .status(400)
-      .json({ result: false, message: "uid가 누락되었습니다." });
+    /**에러의 불변하는 부분을 추상화하여 error 파일에 모아두고 가져다가 쓴다. */
+    throw new BadReqError("uid가 누락되었습니다.");
   }
 
   if (email === undefined || email === null) {
-    return res
-      .status(400)
-      .json({ result: false, message: "email가 누락되었습니다." });
+    throw new BadReqError("email가 누락되었습니다.");
   }
 
   const addResult = await MemberModel.add({
