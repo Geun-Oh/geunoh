@@ -14,12 +14,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { method } = req;
-  const supportMethod = ["POST"];
+  const supportMethod = ["POST", "GET"];
   try {
     checkSupportMethod(supportMethod, method!);
     await MemberCtrl.findByScreenName(req, res);
   } catch (err) {
-    console.error(err)
-    handleError(req, res)
+    console.error(err);
+    handleError(req, res);
   }
 }
