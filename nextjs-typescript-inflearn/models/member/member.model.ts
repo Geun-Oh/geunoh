@@ -16,15 +16,6 @@ type AddResult = { result: true; id: string } | { result: false; message: string
 
 async function add({ uid, email, displayName, photoURL }: InAuthUser): Promise<AddResult> {
   try {
-    const addResult = await FirebaseAdmin.getInstance()
-      .Firebase.collection(MEMBER_COL)
-      .doc(uid)
-      .set({
-        uid,
-        email,
-        displayName: displayName ?? "",
-        photoURL: photoURL ?? "",
-      });
     const screenName = (email as string).replace("@gmail.com", "");
     await FirebaseAdmin.getInstance()
       .Firebase.collection(SCR_NAME_COL)

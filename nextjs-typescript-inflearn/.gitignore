@@ -28,6 +28,7 @@ yarn-error.log*
 # local env files
 .env*local
 .env*
+nextjs-typescript-blahx2-firebase-adminsdk-pc2oz-9cd7015cb7.json
 
 # vercel
 .vercel

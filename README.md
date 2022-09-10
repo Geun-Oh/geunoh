@@ -165,3 +165,8 @@ item8에서 객체 내의 값을 . 으로 조회하는 것이랑 []로 조회하
 
 effective typescript 4강을 마무리했다.
 item9 타입 단언보다 타입 선언을 사용하기를 읽고 정리하였다.
+
+nextjs typescript 강의를 들으며 사용자 질문 창을 제작 중.
+
+- 차크라 UI... 아주 쓸만하다.
+- react-textarea-resize와 정규표현식을 이용한 특정 줄 이상 작성 방지하기, useToast를 잘 기억해두자!!

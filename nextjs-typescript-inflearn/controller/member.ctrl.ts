@@ -20,7 +20,7 @@ async function add(req: NextApiRequest, res: NextApiResponse) {
     photoURL,
   });
   if (addResult.result === true) return res.status(200).json(addResult);
-  res.status(500).json(addResult);
+  return res.status(500).json(addResult);
 }
 
 async function findByScreenName(req: NextApiRequest, res: NextApiResponse) {
