@@ -2,17 +2,16 @@ import { Avatar, Box, Flex, Text, Textarea, Button, useToast, FormControl, Switc
 import { GetServerSideProps, NextPage } from "next";
 import { ServiceLayout } from "../../components/service_layout";
 import Resizetextarea from 'react-textarea-autosize';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../context/auth_user_context";
 import { InAuthUser } from "../../models/in_auth_user";
-import axios, { AxiosResponse } from "axios";
-import { request } from "https";
-import { ClientRequest } from "http";
-
+import axios, { AxiosPromise, AxiosResponse } from "axios";
 
 interface Props {
     userInfo: InAuthUser | null;
 }
+
+
 
 
 // const userInfo = {
@@ -23,6 +22,19 @@ interface Props {
 // }
 
 const UserHomePage: NextPage<Props> = ({ userInfo }) => {
+    // const [userInfo, setUserInfo] = useState<Object | null>(null);
+    // useEffect(() => {
+    //     async function getRes() {
+    //         try {
+    //             const d: AxiosPromise<any> = await axios(`https://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io/api/user_info/a01091634257`).then(res => res.data);
+    //             console.log(d);
+    //             setUserInfo(d);
+    //         } catch (err) {
+    //             console.log(err);
+    //         }
+    //     }
+    //     getRes();
+    // }, [])
     const [message, setMessage] = useState<string>("");
     const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
     const toast = useToast();
@@ -94,13 +106,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
         // const port = process.env.PORT || '3000';
         // const baseURL = "https://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io";
         // SSR에서는 fetch 메서드를 사용할 수 없으므로 기타 라이브러리를 이용해야 한다.
-        const URL = `http://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io/api/user_info/${screenName}`;
-        console.info(URL);
-        const userInfo: AxiosResponse<InAuthUser> = await axios(URL)
-        console.info(userInfo);
+        // const URL = `http://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io/api/user_info/${screenName}`;
+        // console.info(URL);
+        const userInfoRes: AxiosPromise<InAuthUser> = axios(`http://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io/api/user_info/a01091634257`).then(res => res.data);
+        console.info(userInfoRes);
         return {
             props: {
-                userInfo: userInfo.data ?? null,
+                userInfo: (await userInfoRes).data ?? null,
             }
         }
     } catch (err) {
