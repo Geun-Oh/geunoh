@@ -18,7 +18,7 @@ async function add({ uid, email, displayName, photoURL }: InAuthUser): Promise<A
   try {
     const screenName = (email as string).replace("@gmail.com", "");
     await FirebaseAdmin.getInstance()
-      .Firebase.collection(SCR_NAME_COL)
+      .Firestore.collection(SCR_NAME_COL)
       .doc(screenName)
       .set({
         uid,
@@ -30,13 +30,13 @@ async function add({ uid, email, displayName, photoURL }: InAuthUser): Promise<A
      * 데이터베이스에 대해서 트랜젝션을 실행한다.
      * 즉 데이터를 변경하는 과정을 말하는 것!(추가, 삭제를 포함해서)
     */      
-    await FirebaseAdmin.getInstance().Firebase.runTransaction(
+    await FirebaseAdmin.getInstance().Firestore.runTransaction(
       async (transaction) => {
         const memberRef = FirebaseAdmin.getInstance()
-          .Firebase.collection(MEMBER_COL)
+          .Firestore.collection(MEMBER_COL)
           .doc(uid);
         const screenNameRef = FirebaseAdmin.getInstance()
-          .Firebase.collection(SCR_NAME_COL)
+          .Firestore.collection(SCR_NAME_COL)
           .doc(screenName);
         const memberDoc = await transaction.get(memberRef);
         if (memberDoc.exists) {
@@ -62,7 +62,7 @@ async function add({ uid, email, displayName, photoURL }: InAuthUser): Promise<A
 }
 
 async function findByScreenName(screenName: string): Promise<InAuthUser | null> {
-  const memberRef = FirebaseAdmin.getInstance().Firebase.collection(SCR_NAME_COL).doc(screenName);
+  const memberRef = FirebaseAdmin.getInstance().Firestore.collection(SCR_NAME_COL).doc(screenName);
 
   const memberDoc = await memberRef.get();
   if(memberDoc.exists === false) return null;

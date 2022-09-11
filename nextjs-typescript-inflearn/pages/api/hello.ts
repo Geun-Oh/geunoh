@@ -10,6 +10,6 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  FirebaseAdmin.getInstance().Firebase.collection("test");
+  FirebaseAdmin.getInstance().Firestore.collection("test");
   res.status(200).json({ name: "John Doe" });
 }
