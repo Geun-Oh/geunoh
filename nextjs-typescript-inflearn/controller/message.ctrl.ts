@@ -10,8 +10,17 @@ const post = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(201).end();
 }
 
+const list = async (req: NextApiRequest, res: NextApiResponse) => {
+    const { uid } = req.query;
+    if(uid === undefined) throw new BadReqError('uid가 누락되었습니다.');
+    const uidToString = Array.isArray(uid) ? uid[0] : uid;
+    const listRes = await MessageModel.list({ uid: uidToString });
+    return res.status(200).json(listRes);
+}
+
 const MessageCtrl = {
     post,
+    list,
 }
 
 export default MessageCtrl;

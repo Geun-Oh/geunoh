@@ -1,4 +1,5 @@
-import { Avatar, Box, Divider, Flex, Text } from "@chakra-ui/react"
+import { Avatar, Box, Button, Divider, Flex, Text, Textarea } from "@chakra-ui/react";
+import ResizeTextarea from "react-textarea-autosize";
 import { InMessage } from "../models/message/in_message";
 import convertDateToString from "../utils/convert_date_to_string";
 
@@ -10,7 +11,7 @@ interface Props {
     item: InMessage;
 }
 
-const MessageItem = ({ displayName, photoURL, item }: Props) => {
+const MessageItem = ({ displayName, isOwner, photoURL, item }: Props) => {
     const haveReply = item.reply !== undefined;
     return (
         <Box borderRadius="md" width="full" bg="white" boxShadow="md">
@@ -28,22 +29,36 @@ const MessageItem = ({ displayName, photoURL, item }: Props) => {
                     <Text whiteSpace="pre-line" fontSize="sm">{item.message}</Text>
                 </Box>
                 {haveReply && (<Box pt="2">
-                <Divider />
-                <Box display="flex" mt="2">
-                    <Box pt="2"><Avatar size="xs" src={photoURL} mr="2" /></Box>
-                    <Box borderRadius="md" p="2" width="full" bg="gray.100">
-                    <Flex alignItems="center">
-                        <Text fontSize="xs">{displayName}</Text>
-                        <Text whiteSpace="pre-line" fontSize="xs" color="gray">
-                            {convertDateToString(item.replyAt!)}
-                        </Text>
-                    </Flex>
-                    <Text whiteSpace="pre-line" fontSize="xs">
-                        {item.reply}
-                    </Text>
-                </Box>
-                </Box>
-            </Box>)}
+                    <Divider />
+                    <Box display="flex" mt="2">
+                        <Box pt="2"><Avatar size="xs" src={photoURL} mr="2" /></Box>
+                        <Box borderRadius="md" p="2" width="full" bg="gray.100">
+                            <Flex alignItems="center">
+                                <Text fontSize="xs">{displayName}</Text>
+                                <Text whiteSpace="pre-line" fontSize="xs" color="gray">
+                                    {convertDateToString(item.replyAt!)}
+                                </Text>
+                            </Flex>
+                            <Text whiteSpace="pre-line" fontSize="xs">
+                                {item.reply}
+                            </Text>
+                        </Box>
+                    </Box>
+                </Box>)}
+                {haveReply === false && isOwner && (
+                    <Box pt="2">
+                        <Divider />
+                        <Box display="flex" mt="2">
+                            <Box pt="1">
+                                <Avatar size="xs" src={photoURL} mr="2" />
+                            </Box>
+                            <Box borderRadius="md" width="full" bg="gray.100" mr="2">
+                                <Textarea border="none" boxShadow="none !important" resize="none" minH="unset" overflow="hidden" fontSize="xs" placeholder="댓글을 입력하세요..." as={ResizeTextarea} />
+                            </Box>
+                            <Button colorScheme="pink" bgColor="#FF7585" variant="solid" size="sm">등록</Button>
+                        </Box>
+                    </Box>
+                )}
             </Box>
         </Box>
     )

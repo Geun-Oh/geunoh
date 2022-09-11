@@ -7,6 +7,7 @@ import { useAuth } from "../../context/auth_user_context";
 import { InAuthUser } from "../../models/in_auth_user";
 import axios, { AxiosPromise, AxiosResponse } from "axios";
 import MessageItem from "../../components/message_item";
+import { InMessage } from "../../models/message/in_message";
 
 interface Props {
     userInfo: InAuthUser | null;
@@ -66,11 +67,28 @@ const UserHomePage: NextPage<Props> = () => {
     }, [])
     const [message, setMessage] = useState<string>("");
     const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
+    const [messageList, setMessageList] = useState<InMessage[]>([]);
     const toast = useToast();
     const { authUser } = useAuth();
+    const fetchMessageList = async (uid: string) => {
+        try {
+            const response = await fetch(`/api/message.list?uid=${uid}`);
+            if(response.status === 200) {
+                const data = await response.json();
+                setMessageList(data);
+            }
+        } catch(err) {
+            console.error(err);
+        }
+    }
+    useEffect(() => {
+        if(userInfo === null) return;
+        fetchMessageList(userInfo?.uid);
+    }, [userInfo])
     if (userInfo === null) {
         return <p>사용자를 찾을 수 없습니다.</p>;
     }
+    const isOwner = authUser !== null && authUser.uid === userInfo.uid;
     return (
         <ServiceLayout title={userInfo.displayName!} minH="100vh" backgroundColor="gray.50">
             <Box maxW="md" mx="auto" pt="6">
@@ -123,7 +141,9 @@ const UserHomePage: NextPage<Props> = () => {
                     </FormControl>
                 </Box>
                 <VStack spacing="12px" mt="6">
-                    <MessageItem uid="asdf" photoURL={authUser?.photoURL ?? ""} displayName="test" isOwner={false} item={{id: "test", message: "test-asdf", createAt: "2022-09-01T16:37:30+09:00", reply: "reply", replyAt: "2022-09-11T16:37:30+09:00"}} />
+                    {messageList.map((messageData) => {
+                        return <MessageItem key={`message-item-${userInfo.uid}-${messageData.id}`} item={messageData} uid={userInfo.uid} displayName={userInfo.displayName ?? ""} photoURL={userInfo.photoURL ?? "http://bit.ly/broken-link"} isOwner={isOwner} />
+                    })}
                 </VStack>
             </Box>
         </ServiceLayout>
