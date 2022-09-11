@@ -23,7 +23,6 @@ interface Props {
 // }
 
 const UserHomePage: NextPage<Props> = ({ userInfo }) => {
-    console.info(userInfo);
     const [message, setMessage] = useState<string>("");
     const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
     const toast = useToast();
@@ -81,6 +80,7 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) => {
     const { screenName } = query;
+    console.info(screenName);
     if (screenName === undefined) {
         return {
             props: {
@@ -94,14 +94,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ query }) =
         // const port = process.env.PORT || '3000';
         // const baseURL = "https://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io";
         // SSR에서는 fetch 메서드를 사용할 수 없으므로 기타 라이브러리를 이용해야 한다.
-        const userInfo: AxiosResponse<InAuthUser> = await axios(`https://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io/api/user_info/${screenName}`);
+        const URL = `http://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io/api/user_info/${screenName}`;
+        console.info(URL);
+        const userInfo: AxiosResponse<InAuthUser> = await axios(URL)
+        console.info(userInfo);
         return {
             props: {
                 userInfo: userInfo.data ?? null,
             }
         }
     } catch (err) {
-        console.error(err);
+        console.log(err);
         return {
             props: {
                 userInfo: null,
