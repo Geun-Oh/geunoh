@@ -53,7 +53,7 @@ const list = async ({ uid }: { uid: string }) => {
     const messageCol = memberRef.collection(MSG_COL);
     const messageColDoc = await transaction.get(messageCol);
     const data = messageColDoc.docs.map((mv) => {
-      const docData = mv.data() as Omit<InMessageServer, 'id'>;
+      const docData = mv.data() as Omit<InMessageServer, "id">;
       const returnData = {
         ...docData,
         id: mv.id,
@@ -65,11 +65,40 @@ const list = async ({ uid }: { uid: string }) => {
     return data;
   });
   return listData;
-}
+};
+
+const postReply = async ({
+  uid,
+  messageId,
+  reply,
+}: {
+  uid: string;
+  messageId: string;
+  reply: string;
+}) => {
+  const memberRef = Firestore.collection(MEMBER_COL).doc(uid);
+  const messageRef = Firestore.collection(MEMBER_COL).doc(uid).collection(MSG_COL).doc(messageId);
+  await Firestore.runTransaction( async (transaction) => {
+    const memberDoc = await transaction.get(memberRef);
+    const messageDoc = await transaction.get(messageRef);
+    if(memberDoc.exists === false) {
+      throw new CustomServerError({ statusCode: 400, message: '존재하지 않는 유저입니다.' });
+    }
+    if(messageDoc.exists === false) {
+      throw new CustomServerError({ statusCode: 400, message: '존재하지 않는 문서입니다.' });
+    }
+    const messageData = messageDoc.data() as InMessageServer;
+    if(messageData.reply !== undefined) {
+      throw new CustomServerError({ statusCode: 400, message: '이미 댓글을 입력했습니다.' });
+    }
+    await transaction.update(memberRef, { reply, replyAt: firestore.FieldValue.serverTimestamp() });
+  });
+};
 
 const MessageModel = {
   post,
   list,
+  postReply,
 };
 
 export default MessageModel;

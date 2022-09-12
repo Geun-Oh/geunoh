@@ -68,6 +68,7 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
     const [message, setMessage] = useState<string>("");
     const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
     const [messageList, setMessageList] = useState<InMessage[]>([]);
+    const [messageListFetchTrigger, setMessageListFetchTrigger] = useState<boolean>(false);
     const toast = useToast();
     const { authUser } = useAuth();
     const fetchMessageList = async (uid: string) => {
@@ -83,8 +84,8 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
     }
     useEffect(() => {
         if(userInfo === null) return;
-        fetchMessageList(userInfo?.uid);
-    }, [userInfo])
+        fetchMessageList(userInfo.uid);
+    }, [userInfo, messageListFetchTrigger]);
     if (userInfo === null) {
         return <p>사용자를 찾을 수 없습니다.</p>;
     }
@@ -142,7 +143,7 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
                 </Box>
                 <VStack spacing="12px" mt="6">
                     {messageList.map((messageData) => {
-                        return <MessageItem key={`message-item-${userInfo.uid}-${messageData.id}`} item={messageData} uid={userInfo.uid} displayName={userInfo.displayName ?? ""} photoURL={userInfo.photoURL ?? "http://bit.ly/broken-link"} isOwner={isOwner} />
+                        return <MessageItem key={`message-item-${userInfo.uid}-${messageData.id}`} item={messageData} uid={userInfo.uid} displayName={userInfo.displayName ?? ""} photoURL={userInfo.photoURL ?? "http://bit.ly/broken-link"} isOwner={isOwner} onSendComplete={() => setMessageListFetchTrigger(prev => !prev)} />
                     })}
                 </VStack>
             </Box>

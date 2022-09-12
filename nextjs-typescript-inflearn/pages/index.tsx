@@ -1,5 +1,4 @@
 import { Box, Center, Flex, Heading } from '@chakra-ui/react';
-import { GoogleAuthProvider } from 'firebase/auth';
 import { NextPage } from 'next';
 import { GoogleLoginButton } from '../components/google_login_button';
 import { ServiceLayout } from '../components/service_layout';

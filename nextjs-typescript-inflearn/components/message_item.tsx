@@ -1,4 +1,5 @@
 import { Avatar, Box, Button, Divider, Flex, Text, Textarea } from "@chakra-ui/react";
+import { useState } from "react";
 import ResizeTextarea from "react-textarea-autosize";
 import { InMessage } from "../models/message/in_message";
 import convertDateToString from "../utils/convert_date_to_string";
@@ -9,9 +10,16 @@ interface Props {
     photoURL: string;
     isOwner: boolean;
     item: InMessage;
+    onSendComplete: () => void;
 }
 
-const MessageItem = ({ displayName, isOwner, photoURL, item }: Props) => {
+const MessageItem = ({ uid, displayName, isOwner, photoURL, item, onSendComplete }: Props) => {
+    const [reply, setReply] = useState<string>('');
+    const postReply = async () => {
+        const res = await fetch('/api/message.add.reply', { method: 'POST', headers: { 'Content-type' : 'application/json' }, body: JSON.stringify({ uid, messageId: item.id, reply })});
+        if(res.status < 300) onSendComplete();
+    }
+
     const haveReply = item.reply !== undefined;
     return (
         <Box borderRadius="md" width="full" bg="white" boxShadow="md">
@@ -53,9 +61,13 @@ const MessageItem = ({ displayName, isOwner, photoURL, item }: Props) => {
                                 <Avatar size="xs" src={photoURL} mr="2" />
                             </Box>
                             <Box borderRadius="md" width="full" bg="gray.100" mr="2">
-                                <Textarea border="none" boxShadow="none !important" resize="none" minH="unset" overflow="hidden" fontSize="xs" placeholder="댓글을 입력하세요..." as={ResizeTextarea} />
+                                <Textarea border="none" boxShadow="none !important" resize="none" minH="unset" overflow="hidden" fontSize="xs" placeholder="댓글을 입력하세요..." as={ResizeTextarea} value={reply} onChange={(e) => {
+                                    setReply(e.currentTarget.value);
+                                }} />
                             </Box>
-                            <Button colorScheme="pink" bgColor="#FF7585" variant="solid" size="sm">등록</Button>
+                            <Button disabled={reply.length === 0} colorScheme="pink" bgColor="#FF7585" variant="solid" size="sm" onClick={() => {
+                                postReply();
+                            }}>등록</Button>
                         </Box>
                     </Box>
                 )}
