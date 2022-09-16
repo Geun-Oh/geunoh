@@ -19,6 +19,29 @@ async function add({ uid, email, displayName, photoURL }: InAuthUser): Promise<A
     const screenName = (email as string).replace("@gmail.com", "");
     await FirebaseAdmin.getInstance()
       .Firestore.collection(SCR_NAME_COL)
+type AddResult =
+  | { result: true; id: string }
+  | { result: false; message: string };
+
+async function add({
+  uid,
+  email,
+  displayName,
+  photoURL,
+}: InAuthUser): Promise<AddResult> {
+  try {
+    const addResult = await FirebaseAdmin.getInstance()
+      .Firebase.collection("members")
+      .doc(uid)
+      .set({
+        uid,
+        email,
+        displayName: displayName ?? "",
+        photoURL: photoURL ?? "",
+      });
+    const screenName = (email as string).replace("@gmail.com", "");
+    await FirebaseAdmin.getInstance()
+      .Firebase.collection("screen_names")
       .doc(screenName)
       .set({
         uid,
@@ -37,6 +60,13 @@ async function add({ uid, email, displayName, photoURL }: InAuthUser): Promise<A
           .doc(uid);
         const screenNameRef = FirebaseAdmin.getInstance()
           .Firestore.collection(SCR_NAME_COL)
+    await FirebaseAdmin.getInstance().Firebase.runTransaction(
+      async (transaction) => {
+        const memberRef = FirebaseAdmin.getInstance()
+          .Firebase.collection("members")
+          .doc(uid);
+        const screenNameRef = FirebaseAdmin.getInstance()
+          .Firebase.collection("screen_names")
           .doc(screenName);
         const memberDoc = await transaction.get(memberRef);
         if (memberDoc.exists) {
@@ -54,7 +84,7 @@ async function add({ uid, email, displayName, photoURL }: InAuthUser): Promise<A
         return true;
       }
     );
-    return{ result: true, id: uid };
+    return { result: true, id: uid };
   } catch (err) {
     console.error(err);
     return { result: false, message: "server error" };
