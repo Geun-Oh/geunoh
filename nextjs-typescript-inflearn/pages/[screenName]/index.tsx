@@ -1,4 +1,5 @@
 import { Avatar, Box, Flex, Text, Textarea, Button, useToast, FormControl, Switch, FormLabel, VStack } from "@chakra-ui/react";
+import { TriangleDownIcon } from "@chakra-ui/icons";
 import { GetServerSideProps, NextPage } from "next";
 import { ServiceLayout } from "../../components/service_layout";
 import Resizetextarea from 'react-textarea-autosize';
@@ -67,16 +68,44 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
     // }, [])
     const [message, setMessage] = useState<string>("");
     const [isAnonymous, setIsAnonymous] = useState<boolean>(true);
+    const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
     const [messageList, setMessageList] = useState<InMessage[]>([]);
     const [messageListFetchTrigger, setMessageListFetchTrigger] = useState<boolean>(false);
     const toast = useToast();
     const { authUser } = useAuth();
     const fetchMessageList = async (uid: string) => {
         try {
-            const response = await fetch(`/api/message.list?uid=${uid}`);
+            const response = await fetch(`/api/message.list?uid=${uid}&page=${page}&size=3`);
             if(response.status === 200) {
-                const data = await response.json();
-                setMessageList(data);
+                const data: {
+                    totalElements: number;
+                    totalPages: number;
+                    page: number;
+                    size: number;
+                    content: InMessage[];
+                } = await response.json();
+                setTotalPages(data.totalPages);
+                setMessageList(prev => [...prev, ...data.content]);
+            }
+        } catch(err) {
+            console.error(err);
+        }
+    }
+    const fetchMessageInfo = async ({uid, messageId}: {uid: string; messageId: string;}) => {
+        try {
+            const response = await fetch(`/api/message.list?uid=${uid}&messageId=${messageId}`);
+            if(response.status === 200) {
+                const data: InMessage = await response.json();
+                setMessageList(prev => {
+                    const findIndex = prev.findIndex((fv) => fv.id === data.id);
+                    if(findIndex >= 0) {
+                        const updateArr = [...prev];
+                        updateArr[findIndex] = data;
+                        return updateArr;
+                    }
+                    return prev;
+                });
             }
         } catch(err) {
             console.error(err);
@@ -85,7 +114,7 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
     useEffect(() => {
         if(userInfo === null) return;
         fetchMessageList(userInfo.uid);
-    }, [userInfo, messageListFetchTrigger]);
+    }, [userInfo, messageListFetchTrigger, page]);
     if (userInfo === null) {
         return <p>사용자를 찾을 수 없습니다.</p>;
     }
@@ -116,7 +145,7 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
                                     return;
                                 }
                             }
-                            setMessage(e.currentTarget.value)
+                            setMessage(e.currentTarget.value);
                         }} />
                         <Button bgColor="#FF886C" color="white" colorScheme="yellow" variant="solid" size="sm" disabled={message.length === 0} onClick={ async () => {
                             const author = isAnonymous ? undefined : {
@@ -126,6 +155,7 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
                             const messageRes = await postMessage({ uid: userInfo.uid, message, author });
                             if(messageRes.result === false) toast({ title: '메세지 등록 실패', position: 'top-right' });
                             setMessage('');
+                            setMessageListFetchTrigger(prev => !prev);
                         }}>등록</Button>
                     </Flex>
                     <FormControl display="flex" alignItems="center" mt="1" mx="2" mb="2">
@@ -143,9 +173,16 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
                 </Box>
                 <VStack spacing="12px" mt="6">
                     {messageList.map((messageData) => {
-                        return <MessageItem key={`message-item-${userInfo.uid}-${messageData.id}`} item={messageData} uid={userInfo.uid} displayName={userInfo.displayName ?? ""} photoURL={userInfo.photoURL ?? "http://bit.ly/broken-link"} isOwner={isOwner} onSendComplete={() => setMessageListFetchTrigger(prev => !prev)} />
+                        return <MessageItem key={`message-item-${userInfo.uid}-${messageData.id}`} item={messageData} uid={userInfo.uid} displayName={userInfo.displayName ?? ""} photoURL={userInfo.photoURL ?? "http://bit.ly/broken-link"} isOwner={isOwner} onSendComplete={() => {
+                            fetchMessageInfo({ uid: userInfo.uid, messageId: messageData.id });
+                        }} />
                     })}
                 </VStack>
+                {totalPages > page && (
+                    <Button width="full" mt="2" fontSize="sm" leftIcon={<TriangleDownIcon />} onClick={() => {
+                        setPage(prev => prev + 1)
+                    }}>더보기</Button>
+                )}
             </Box>
         </ServiceLayout>
     )

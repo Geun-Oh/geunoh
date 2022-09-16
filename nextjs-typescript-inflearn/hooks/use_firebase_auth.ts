@@ -28,7 +28,7 @@ export const useFirebaseAuth = () => {
       );
       if (signInResult.user) {
         console.info(signInResult.user);
-        const res = await fetch("https://3000-geunoh-geunoh-e6igz5vdugx.ws-us64.gitpod.io/api/member.add", {
+        const res = await fetch("/api/member.add", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

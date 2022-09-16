@@ -28,7 +28,7 @@ const MessageItem = ({ uid, displayName, isOwner, photoURL, item, onSendComplete
                     <Avatar size="xs" src={item.author ? item.author?.photoURL ?? "https://bit.ly/broken-link" : "https://bit.ly/broken-link"} />
                     <Text fontSize="xx-small" ml="1">{item.author ? item.author.displayName : "anonymous"}</Text>
                     <Text whiteSpace="pre-line" fontSize="xx-small" color="gray.500" ml="1">
-                        {convertDateToString(item.createAt)}
+                        {convertDateToString(item.createdAt!)}
                     </Text>
                 </Flex>
             </Box>

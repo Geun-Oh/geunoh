@@ -13,11 +13,11 @@ interface MessageBase {
 }
 
 export interface InMessage extends MessageBase {
-    createAt: string;
+    createdAt: string;
     replyAt?: string;
 };
 
 export interface InMessageServer extends MessageBase {
-    createAt: firestore.Timestamp;
+    createdAt: firestore.Timestamp;
     replyAt?: firestore.Timestamp;
 }
