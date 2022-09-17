@@ -9,6 +9,7 @@ import { InAuthUser } from "../../models/in_auth_user";
 import axios, { AxiosResponse } from "axios";
 import MessageItem from "../../components/message_item";
 import { InMessage } from "../../models/message/in_message";
+import { useQuery } from 'react-query';
 
 interface Props {
     userInfo: InAuthUser | null;
@@ -74,24 +75,28 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
     const [messageListFetchTrigger, setMessageListFetchTrigger] = useState<boolean>(false);
     const toast = useToast();
     const { authUser } = useAuth();
-    const fetchMessageList = async (uid: string) => {
-        try {
-            const response = await fetch(`/api/message.list?uid=${uid}&page=${page}&size=3`);
-            if(response.status === 200) {
-                const data: {
-                    totalElements: number;
-                    totalPages: number;
-                    page: number;
-                    size: number;
-                    content: InMessage[];
-                } = await response.json();
-                setTotalPages(data.totalPages);
-                setMessageList(prev => [...prev, ...data.content]);
-            }
-        } catch(err) {
-            console.error(err);
-        }
-    }
+    // const fetchMessageList = async (uid: string) => {
+    //     try {
+    //         const response = await fetch(`/api/message.list?uid=${uid}&page=${page}&size=3`);
+    //         if(response.status === 200) {
+    //             const data: {
+    //                 totalElements: number;
+    //                 totalPages: number;
+    //                 page: number;
+    //                 size: number;
+    //                 content: InMessage[];
+    //             } = await response.json();
+    //             setTotalPages(data.totalPages);
+                // if(page === 1) {
+                //     setMessageList([...data.content]);
+                //     return;
+                // }
+    //             setMessageList(prev => [...prev, ...data.content]);
+    //         }
+    //     } catch(err) {
+    //         console.error(err);
+    //     }
+    // }
     const fetchMessageInfo = async ({uid, messageId}: {uid: string; messageId: string;}) => {
         try {
             const response = await fetch(`/api/message.list?uid=${uid}&messageId=${messageId}`);
@@ -111,10 +116,31 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
             console.error(err);
         }
     }
-    useEffect(() => {
-        if(userInfo === null) return;
-        fetchMessageList(userInfo.uid);
-    }, [userInfo, messageListFetchTrigger, page]);
+
+    const messageListQueryKey = ['messageList', userInfo?.uid, page, messageListFetchTrigger];
+
+    useQuery(messageListQueryKey, async () => await axios.get<{
+        totalElements: number;
+        totalPages: number;
+        page: number;
+        size: number;
+        content: InMessage[];
+    }>(`/api/message.list?uid=${userInfo?.uid}&page=${page}&size=3`), {
+        keepPreviousData: true,
+        refetchOnWindowFocus: false,
+        onSuccess: (data) => {
+            setTotalPages(data.data.totalPages);
+            if(page === 1) {
+                setMessageList([...data.data.content]);
+                return;
+            }
+            setMessageList(prev => [...prev, ...data.data.content]);
+        }
+    })
+    // useEffect(() => {
+    //     if(userInfo === null) return;
+    //     fetchMessageList(userInfo.uid);
+    // }, [userInfo, messageListFetchTrigger, page]);
     if (userInfo === null) {
         return <p>사용자를 찾을 수 없습니다.</p>;
     }
@@ -155,7 +181,10 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
                             const messageRes = await postMessage({ uid: userInfo.uid, message, author });
                             if(messageRes.result === false) toast({ title: '메세지 등록 실패', position: 'top-right' });
                             setMessage('');
-                            setMessageListFetchTrigger(prev => !prev);
+                            setPage(1);
+                            setTimeout(() => {
+                                setMessageListFetchTrigger(prev => !prev);
+                            }, 50);
                         }}>등록</Button>
                     </Flex>
                     <FormControl display="flex" alignItems="center" mt="1" mx="2" mb="2">
@@ -175,6 +204,7 @@ const UserHomePage: NextPage<Props> = ({ userInfo }) => {
                     {messageList.map((messageData) => {
                         return <MessageItem key={`message-item-${userInfo.uid}-${messageData.id}`} item={messageData} uid={userInfo.uid} displayName={userInfo.displayName ?? ""} photoURL={userInfo.photoURL ?? "http://bit.ly/broken-link"} isOwner={isOwner} onSendComplete={() => {
                             fetchMessageInfo({ uid: userInfo.uid, messageId: messageData.id });
+                            setMessageListFetchTrigger(prev => !prev);
                         }} />
                     })}
                 </VStack>

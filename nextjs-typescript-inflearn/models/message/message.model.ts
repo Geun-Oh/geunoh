@@ -51,6 +51,51 @@ const post = async ({
   });
 };
 
+const updateMessage = async ({
+  uid,
+  messageId,
+  deny
+}: {
+  uid: string;
+  messageId: string;
+  deny: boolean;
+}) => {
+  const memberRef = Firestore.collection(MEMBER_COL).doc(uid);
+  const messageRef = Firestore.collection(MEMBER_COL)
+    .doc(uid)
+    .collection(MSG_COL)
+    .doc(messageId);
+  const result = await Firestore.runTransaction(async (transaction) => {
+    const memberDoc = await transaction.get(memberRef);
+    const messageDoc = await transaction.get(messageRef);
+    if (memberDoc.exists === false) {
+      throw new CustomServerError({
+        statusCode: 400,
+        message: "존재하지 않는 유저입니다.",
+      });
+    }
+    if (messageDoc.exists === false) {
+      throw new CustomServerError({
+        statusCode: 400,
+        message: "존재하지 않는 문서입니다.",
+      });
+    }
+    await transaction.update(messageRef, { deny });
+    const messageData = messageDoc.data() as InMessageServer;
+    return {
+      ...messageData,
+      id: messageId,
+      deny,
+      createdAt:
+        messageData.createdAt && messageData.createdAt.toDate().toISOString(),
+      replyAt:
+        messageData.replyAt && messageData.replyAt.toDate().toISOString(),
+    };
+    return messageData;
+  });
+  return result;
+};
+
 const list = async ({ uid }: { uid: string }) => {
   const memberRef = Firestore.collection(MEMBER_COL).doc(uid);
   const listData = await Firestore.runTransaction(async (transaction) => {
@@ -223,6 +268,7 @@ const postReply = async ({
 
 const MessageModel = {
   post,
+  updateMessage,
   list,
   listWithPage,
   get,

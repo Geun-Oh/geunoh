@@ -23,10 +23,7 @@ const convertDateToString = (dataString: string): string => {
         return `${Math.floor(minutes)}분`;
     }
     if(years === 0 && months === 0 && days === 0) {
-        return `${Math.floor(hours)}시`;
-    }
-    if(years === 0 && months === 0 && days === 0) {
-        return `${Math.floor(hours)}시`;
+        return `${Math.floor(hours)}시간`;
     }
     if(years === 0 && months === 0) {
         return `${Math.floor(months)}개월`;
