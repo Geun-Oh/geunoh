@@ -1,8 +1,8 @@
-type belongType = 'soldier' | 'navy' | 'airForce' | "";
+type belongType = "soldier" | "navy" | "airForce" | "";
 
 export interface User {
-    id: string;
-    displayName: string;
-    email: string;
-    belong: belongType;
+  id: string;
+  displayName: string;
+  email: string;
+  belong: belongType;
 }
