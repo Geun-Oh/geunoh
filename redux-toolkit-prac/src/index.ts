@@ -1,7 +1,9 @@
-import { productActions } from "./newProductReducer";
+import { counterActions } from "./newCounterSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from './store';
 
 const getProducts = (searchQuery) => {
-    return async (dispatch, getState) => {
-        dispatch(productActions.getAllProducts({data: "hello"}));
+    return async (dispatch: AppDispatch, getState: number) => {
+        dispatch(counterActions.incrementByAmount(getState));
     }
 } 
