@@ -91,7 +91,6 @@ const updateMessage = async ({
       replyAt:
         messageData.replyAt && messageData.replyAt.toDate().toISOString(),
     };
-    return messageData;
   });
   return result;
 };
@@ -112,8 +111,10 @@ const list = async ({ uid }: { uid: string }) => {
     const messageColDoc = await transaction.get(messageCol);
     const data = messageColDoc.docs.map((mv) => {
       const docData = mv.data() as Omit<InMessageServer, "id">;
+      const isDeny = docData.deny !== undefined && docData.deny === true;
       const returnData = {
         ...docData,
+        message: isDeny ? '비공개 처리된 메세지 입니다.' : docData.message,
         id: mv.id,
         createdAt:
           docData.createdAt && docData.createdAt.toDate().toISOString(),
@@ -169,8 +170,10 @@ const listWithPage = async ({
     const messageColDoc = await transaction.get(messageCol);
     const data = messageColDoc.docs.map((mv) => {
       const docData = mv.data() as Omit<InMessageServer, "id">;
+      const isDeny = docData.deny !== undefined && docData.deny === true;
       const returnData = {
         ...docData,
+        message: isDeny ? '비공개 처리된 메세지 입니다.' : docData.message,
         id: mv.id,
         createdAt:
           docData.createdAt && docData.createdAt.toDate().toISOString(),
@@ -211,8 +214,10 @@ const get = async ({ uid, messageId }: { uid: string; messageId: string }) => {
       });
     }
     const messageData = messageDoc.data() as InMessageServer;
+    const isDeny = messageData.deny !== undefined && messageData.deny === true;
     return {
       ...messageData,
+      message: isDeny ? '비공개 처리된 메세지 입니다.' : messageData.message,
       id: messageId,
       createdAt:
         messageData.createdAt && messageData.createdAt.toDate().toISOString(),

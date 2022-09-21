@@ -36,7 +36,7 @@ const MessageItem = ({ uid, displayName, isOwner, photoURL, item, onSendComplete
         if (res.status < 300) onSendComplete();
     }
 
-    const isDeny = item.deny === undefined ? item.deny = true : false;
+    const isDeny = item.deny !== undefined ? item.deny === true : false;
     const haveReply = item.reply !== undefined;
     return (
         <Box borderRadius="md" width="full" bg="white" boxShadow="md">

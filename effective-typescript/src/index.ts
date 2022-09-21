@@ -1,6 +1,3 @@
-interface Person {
-    name: string;
-}
+const dbstring = process.env.DB_CSTRING || 'noo';
 
-const body = document.body;
-const el = body as unknown as Person;
+console.log(dbstring)

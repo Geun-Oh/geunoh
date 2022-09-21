@@ -209,3 +209,12 @@ react-query 를 사용하는 강의 이전까지 들었다.
 ### 22.09.18
 
 Redux-toolkit 을 typescript와 같이 적용하는 법을 공부하는 중이다.
+
+### 22.09.21
+
+wilim 프로젝트 백엔드를 Elastic Beanstalk을 이용하여 배포하였고,
+다음에 시간이 난다면 github actions를 이용하여 자동화할 생각이다.
+
+프론트엔드는 vercel을 생각중이다.
+
+오랜만에 nextjs 강의를 들었고, 거의 마무리되었다.
