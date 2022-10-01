@@ -1,3 +1,8 @@
-const dbstring = process.env.DB_CSTRING || 'noo';
+interface LineChartOptions {
+    logscale?: boolean;
+    invertedYAxis?: boolean;
+    areaChart?: boolean;
+}
 
-console.log(dbstring)
+const opts = { logscale: true, title: true };
+const a: LineChartOptions = opts;
