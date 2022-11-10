@@ -1,19 +1,21 @@
-const { interval, from } = rxjs;
+// 독립적인 옵저버 생성
 
-const obs$ = from([1, 2, 3, 4, 5])
-const obs1$ = interval(1000)
-const observer = {
-    next: console.log,
-    error: err => console.error('발행중 오류', err),
-    complete: () => console.log('발행 완결'),
-}
+// import { interval, from } from 'rxjs';
 
-obs$.subscribe(observer)
-const sub = obs1$.subscribe(
-    console.log,
-)
+// const obs$ = from([1, 2, 3, 4, 5])
+// const obs1$ = interval(1000)
+// const observer = {
+//     next: console.log,
+//     error: err => console.error('발행중 오류', err),
+//     complete: () => console.log('발행 완결'),
+// }
 
-setTimeout(_ => sub.unsubscribe(), 5000)
+// obs$.subscribe(observer)
+// const sub = obs1$.subscribe(
+//     console.log,
+// )
+
+// setTimeout(_ => sub.unsubscribe(), 5000)
 
 // 직접 만드는 스트림
 // 직접 만드는 스트림의 경우에는 subscriber.complete를 통해 메모리에서 구독을 해제해주어야한다.
