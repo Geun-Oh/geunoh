@@ -1,3 +1,19 @@
+import { BehaviorSubject, ReplaySubject, interval } from 'rxjs'
+const subject = new BehaviorSubject(0) // 초기값이 있음
+const sub = new ReplaySubject(3)
+
+const obs$ = interval(1000)
+
+obs$.subscribe(subject)
+obs$.subscribe(sub)
+
+subject.subscribe((x) => console.log('A: ' + x))
+ 
+setTimeout(() => {
+    sub.subscribe((x) => console.log('B: ' + x))
+}, 5000)
+
+
 // 독립적인 옵저버 생성
 
 // import { interval, from } from 'rxjs';
