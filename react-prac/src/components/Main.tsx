@@ -1,34 +1,42 @@
-import { useEffect, useState } from "react";
-import dst from '../dst';
+import Components from './components';
 
 interface Idst {
-    component: string;
-    attribute?: object;
-    children?: Idst[];
+    component: keyof typeof Components;
+    attribute?: Array<object>;
+    children?: Array<Idst>;
 }
+
+export interface IMain {
+    Main: Array<Idst>;
+}
+
 /**
  * dst.component props로 children을 전달받는 구조가 되도록 수정하기!
  */
 
-const renderDst = (dst: Idst) => {
-    return (
-        <dst.component {...dst.attribute}>
-            {dst.children && dst.children.map((item) => renderDst(item))}
-        </dst.component>
-    )
+const RenderDst = ({ component, attribute, children }: Idst) => {
+    if(component === "Flex" || component === "Box") {
+        const componentName: keyof typeof Components = component
+        const C = Components[componentName]
+        return (
+            <C {...attribute![0]}>
+                {children!.map((item) => RenderDst(item))}
+            </C>
+        )
+    } else {
+        const componentName: keyof typeof Components = component
+        const C = Components[componentName]
+        return (
+            <C {...attribute![0]} />
+        )
+    }
 }
 
 const Main = () => {
-    const [status, setStatus] = useState<string>("APPROVE");
-    useEffect(() => {
-        const status = "APPROVE";
-        setStatus(status);
-    }, []);
-
-    dst.Main
-
     return (
-        status !== null && <button style={{ backgroundColor: status === "APPROVE" ? "red" : "blue" }}>Click!</button>
+        <>
+            {RenderDst(dst!.Main[0])}
+        </>
     )
 }
 
