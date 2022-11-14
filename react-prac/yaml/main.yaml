@@ -5,9 +5,9 @@ Main:
     children:
       - component: Text
         attribute:
-          - innerText: Test 1
+          - innerText: Hello!!
       - component: Box
         children:
         - component: Text
           attribute:
-            - innerText: Its' In Box
+            - innerText: Its' Test

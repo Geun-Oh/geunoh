@@ -3,14 +3,11 @@ Main:
     attribute:
       - flexDirection: column
     children:
-      - component: Header
+      - component: Text
         attribute:
-          - ratio: 100px
-      - component: Flex
-        attribute:
-          - flexDirection: row
+          - innerText: Test 1
+      - component: Box
         children:
-        - component: SideBar
+        - component: Text
           attribute:
-            - ratio: 20
-              max: 300px
+            - innerText: Its' In Box

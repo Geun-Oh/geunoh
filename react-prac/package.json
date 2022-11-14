@@ -4,9 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "tsc && ",
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "node dst.js && vite",
+    "build": "node dst.js && tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
