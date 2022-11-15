@@ -10,12 +10,13 @@ const render = (json) => {
     try {
         const dst = JSON.stringify(yaml.load(fs.readFileSync(json, 'utf-8')));
         console.log(dst);
-        fs.writeFileSync('dst.json', dst);
+        exec(`cd ../react-prac && cat <<EOF > ./dst.json\n ${dst}`);
+        // fs.writeFileSync('dst.json', dst);
         // exec('npm run dev', (err) => console.log(err))
     } catch (e) {
         console.log(e);
     }
-    exec(`cp ./dst.json ../react-prac/dst.json && cd ../react-prac && npm run dev`);
+    exec(`cd ../react-prac && npm run dev`);
     console.log('Vite app is running...');
 }
 // exec('npm run dev')
@@ -26,5 +27,6 @@ const render = (json) => {
 // } catch (e) {
 //     console.log(e);
 // }
+//cp ./dst.json ../react-prac/dst.json
 
 export default render;
