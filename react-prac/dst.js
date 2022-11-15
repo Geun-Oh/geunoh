@@ -15,7 +15,7 @@ const render = (json) => {
     } catch (e) {
         console.log(e);
     }
-    exec(`cp ${json} ../react-prac/yaml/main.yaml && cd ../react-prac && npm run dev`);
+    exec(`cp ./dst.json ../react-prac/dst.json && cd ../react-prac && npm run dev`);
     console.log('Vite app is running...');
 }
 // exec('npm run dev')
