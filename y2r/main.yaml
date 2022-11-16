@@ -1,0 +1,13 @@
+Main:
+  - component: Flex
+    attribute:
+      - flexDirection: column
+    children:
+      - component: Text
+        attribute:
+          - innerText: Test 1
+      - component: Box
+        children:
+        - component: Text
+          attribute:
+            - innerText: 바뀐 내용입니다.

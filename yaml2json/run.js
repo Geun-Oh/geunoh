@@ -1,3 +1,3 @@
-import render from '../react-prac/dst.js'
+import { renderWithYaml } from '../react-prac/dst.js'
 
-render("./main.yaml");
+renderWithYaml("./main.yaml");

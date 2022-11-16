@@ -1,4 +1,4 @@
-import { RenderTest } from '../../node_modules/y2r/renderDst';
+import { RenderTest } from '../../renderDst';
 
 const Main = () => {
     return (
