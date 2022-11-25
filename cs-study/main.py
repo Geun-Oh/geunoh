@@ -1,47 +1,28 @@
-from collections import deque
+node, line = list(map(int, input().split()))
 
-case = int(input())
+graph = [[] for _ in range(node)]
+for _ in range(line):
+    a, b = list(map(int, input().split()))
+    if b not in graph[a - 1]:
+        graph[a - 1].append(b)
+    if a not in graph[b - 1]:
+        graph[b - 1].append(a)
+
+visited = [False] * node
+
+def dfs(graph, i, visited):
+    if visited[i - 1] == True:
+        return False
+    visited[i - 1] = True
+    for j in graph[i - 1]:
+        if visited[j - 1] == False:
+            dfs(graph, j, visited)
+    return True
+
 count = 0
 
-def bfs(x, y, graph, height, width):
-    queue = deque()
-    if x <= -1 or x >= height or y <= -1 or y >= width:
-        return 9
-    if graph[x][y] == 0:
-        return 999
-    if graph[x][y] == 1:
-        graph[x][y] -= 1
-        queue.append((x + 1, y))
-        queue.append((x - 1, y))
-        queue.append((x, y + 1))
-        queue.append((x, y - 1))
-        while queue:
-            a, b = queue.popleft()
-            if a <= -1 or a >= height or b <= -1 or b >= width:
-                continue
-            if graph[a][b] == 0:
-                continue
-            if graph[a][b] == 1:
-                graph[a][b] -= 1
-                queue.append((a + 1, b))
-                queue.append((a - 1, b))
-                queue.append((a, b + 1))
-                queue.append((a, b - 1))
-        return True
+for i in range(node):
+    if dfs(graph, i + 1, visited) == True:
+        count += 1
 
-for _ in range(case):
-    count = 0
-    x, y, n = list(map(int, input().split()))
-    graph = [[0] * y for _ in range(x)]
-
-    for _ in range(n):
-        a, b = list(map(int, input().split()))
-        graph[a][b] = 1
-
-    for i in range(x):
-        for j in range(y):
-            if bfs(i, j, graph, x, y) == True:
-                count += 1
-    
-
-    print(count)
+print(count)
