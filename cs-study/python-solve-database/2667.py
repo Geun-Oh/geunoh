@@ -1,15 +1,21 @@
 from collections import deque
 
-case = int(input())
-count = 0
+queue = deque()
+num = int(input())
+ans = []
 
-def bfs(x, y, graph, height, width):
-    queue = deque()
-    if x <= -1 or x >= height or y <= -1 or x >= width:
+graph = []
+for _ in range(num):
+    graph.append(list(map(int, input())))
+
+def bfs(x, y, graph):
+    count = 0
+    if x <= -1 or x >= num or y <= -1 or x >= num:
         return False
     if graph[x][y] == 0:
         return False
     if graph[x][y] == 1:
+        count += 1
         graph[x][y] -= 1
         queue.append((x + 1, y))
         queue.append((x - 1, y))
@@ -17,31 +23,24 @@ def bfs(x, y, graph, height, width):
         queue.append((x, y - 1))
         while queue:
             a, b = queue.popleft()
-            if a <= -1 or a >= height or b <= -1 or b >= width:
+            if a <= -1 or a >= num or b <= -1 or b >= num:
                 continue
             if graph[a][b] == 0:
                 continue
             if graph[a][b] == 1:
+                count += 1
                 graph[a][b] -= 1
                 queue.append((a + 1, b))
                 queue.append((a - 1, b))
                 queue.append((a, b + 1))
                 queue.append((a, b - 1))
-        return True
+    ans.append(count)
 
-for _ in range(case):
-    count = 0
-    x, y, n = list(map(int, input().split()))
-    graph = [[0] * y for _ in range(x)]
-
-    for _ in range(n):
-        a, b = list(map(int, input().split()))
-        graph[a][b] = 1
-
-    for i in range(x):
-        for j in range(y):
-            if bfs(i, j, graph, x, y) == True:
-                count += 1
-    
-    print(bfs(4, 0, graph, 3, 5))
-    print(count)
+for i in range(num):
+    for j in range(num):
+        bfs(i, j, graph)
+        
+ans.sort()
+print(len(ans))
+for i in ans:
+    print(i)
