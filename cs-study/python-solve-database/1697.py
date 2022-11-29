@@ -13,6 +13,7 @@ def bfs(n, k):
     queue.append((n * 2, 0))
     while queue:
         m, cnt = queue.popleft()
+        # 숫자가 너무 커져서 생기는 메모리 초과를 방지해줄 필요가 있다.
         if m > 100000 or m < 0:
             continue
         cnt += 1
