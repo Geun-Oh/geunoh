@@ -1,19 +1,29 @@
+from collections import deque
+
 n, m = list(map(int, input().split()))
 
-check = []
+ans = []
+k = []
 
-def dfs(arr):
-    if len(arr) >= m:
-        return
-    for i in range(n):
-        arr.append(i + 1)
-        if arr in check:
+def bfs(n, m):
+    dep = 0
+    queue = deque()
+    for i in range(1, n + 1):
+        queue.append([i])
+    while queue:
+        arr = queue.popleft()
+        if len(arr) == m:
+            print(sorted(arr))
+            k.append(sorted(arr))
             continue
-        else:
-            print(arr)
-            check.append(arr)
-            dfs(arr)
+        for j in range(1, n + 1):
+            queue.append(arr.append(j))
 
-dfs([])
-
-print(check)
+bfs(n, m)
+# print(k)
+# for y in k:
+#     for i in range(m):
+#         if i == m - 1:
+#             print(y[i])
+#         else:
+#             print(y[i], end=" ")
