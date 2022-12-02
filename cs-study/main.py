@@ -1,29 +1,10 @@
-from collections import deque
+## 17070 풀이 중
 
-n, m = list(map(int, input().split()))
+# 포지션 1, 2, 3이 각각 가로 세로 대각선
+# 1, [0, 1]이면 dfs((1, [0, 1 + 1])) dfs((3, [0 + 1, 1 + 1]))을 실행한다.
 
-ans = []
-k = []
+# 위치가 맵을 벗어나면 false
+# 포지션이 1이나 2일 때 위치가 벽이면 false를 반환
+# 포지션이 3일 때 위치와 왼쪽 오른쪽 중 하나라도 벽이면 false를 반환
 
-def bfs(n, m):
-    dep = 0
-    queue = deque()
-    for i in range(1, n + 1):
-        queue.append([i])
-    while queue:
-        arr = queue.popleft()
-        if len(arr) == m:
-            print(sorted(arr))
-            k.append(sorted(arr))
-            continue
-        for j in range(1, n + 1):
-            queue.append(arr.append(j))
-
-bfs(n, m)
-# print(k)
-# for y in k:
-#     for i in range(m):
-#         if i == m - 1:
-#             print(y[i])
-#         else:
-#             print(y[i], end=" ")
+# 위치가 n, n이면 count 를 하나 증가
