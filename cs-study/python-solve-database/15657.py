@@ -1,11 +1,10 @@
 n, m = list(map(int, input().split()))
 nums = list(map(int, input().split()))
-inums = []
+
 ans = []
-last = 0
+visited = [False] * n
 
 def backtraking(dep, n, m, nums):
-    global last
     if dep == m + 1:
         for i in range(m):
             if i == m - 1:
@@ -14,13 +13,12 @@ def backtraking(dep, n, m, nums):
                 print(ans[i], end=" ")
         return
     for i in range(n):
-        if len(ans) >= 1 and ans[-1] > nums[i]:
-            continue
-        if (dep, nums[i]) == last:
+        if dep >= 2 and ans[-1] > nums[i]:
             continue
         ans.append(nums[i])
+        visited[i] = True
         backtraking(dep + 1, n, m, nums)
-        last = (dep, ans[-1])
         ans.pop()
+        visited[i] = False
     
 backtraking(1, n, m, sorted(nums))
