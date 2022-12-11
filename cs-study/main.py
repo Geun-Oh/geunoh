@@ -15,32 +15,35 @@ for i in range(m):
 start, end = map(int, input().split())
 
 def dijkstra(graph, start):
-    distances = [[INF, [start]] for i in range(n + 1)]
+    distances = [INF] * (n + 1)
     visited = [False] * (n + 1)
-    distances[start][0] = 0
+    route = [[] for i in range(n + 1)]
+    distances[start] = 0
     queue = []
-    heapq.heappush(queue, (distances[start], start)) # (거리, 노드)
+    heapq.heappush(queue, ((distances[start], []), start)) # (거리, 노드)
 
     while queue:
         distance, des = heapq.heappop(queue)
-        dis, route = distance
+        dis, iroute = distance
         visited[des] = True
         for i in range(1, n + 1):
             new_dis = graph[des][i]
             new_des = i
-            if distances[new_des][0] < dis:
+            if distances[new_des] < dis:
                 continue
-            if distances[new_des][0] > dis + new_dis:
-                distances[new_des][0] = dis + new_dis
-                distances[new_des][1].append(des)
-                print(distances[new_des])
-                heapq.heappush(queue, (distances[new_des], new_des))
-    return distances
+            if distances[new_des] > dis + new_dis:
+                distances[new_des] = dis + new_dis
+                iroute.append(des)
+                print(iroute, route)
+                route[new_des] = iroute
+                heapq.heappush(queue, ((distances[new_des], iroute), new_des))
+    return (distances, route)
 
-ans = dijkstra(graph, start)[end][1]
-ans.append(end)
+print(dijkstra(graph, start))
 
-print(dijkstra(graph, start)[end])
-print(dijkstra(graph, start)[end][0])
-print(len(ans))
-print(*ans)
+# ans = dijkstra(graph, start)[1]
+# ans.append(end)
+
+# print(dijkstra(graph, start)[0][end])
+# print(len(ans))
+# print(*ans)
