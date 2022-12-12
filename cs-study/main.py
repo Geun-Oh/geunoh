@@ -1,49 +1,31 @@
-import heapq
-import sys
-
-input = sys.stdin.readline
-
 n = int(input())
-m = int(input())
-INF = int(1e9)
-graph = [[INF] * (n + 1) for i in range(n + 1)]
 
-for i in range(m):
-    a, b, c = map(int, input().split())
-    graph[a][b] = min(c, graph[a][b]) # 노드와 거리를 초기화
+arr = []
+for i in range(n):
+    t = list(map(int, input().split()))
+    arr.append(t)
 
-start, end = map(int, input().split())
+dp = [[0, 0, 0] for i in range(n)]
+dp[0] = arr[0]
 
-def dijkstra(graph, start):
-    distances = [INF] * (n + 1)
-    visited = [False] * (n + 1)
-    route = [[] for i in range(n + 1)]
-    distances[start] = 0
-    queue = []
-    heapq.heappush(queue, ((distances[start], []), start)) # (거리, 노드)
+def solve():
+    if n == 1:
+        return [max(arr[0]), min(arr[0])]
+    
+    ans = []
+    for i in range(1, n):
+        dp[i][0] = max(dp[i - 1][0], dp[i - 1][1]) + arr[i][0]
+        dp[i][1] = max(dp[i - 1][0], dp[i - 1][1], dp[i - 1][2]) + arr[i][1]
+        dp[i][2] = max(dp[i - 1][1], dp[i - 1][2]) + arr[i][2]
 
-    while queue:
-        distance, des = heapq.heappop(queue)
-        dis, iroute = distance
-        visited[des] = True
-        for i in range(1, n + 1):
-            new_dis = graph[des][i]
-            new_des = i
-            if distances[new_des] < dis:
-                continue
-            if distances[new_des] > dis + new_dis:
-                distances[new_des] = dis + new_dis
-                iroute.append(des)
-                print(iroute, route)
-                route[new_des] = iroute
-                heapq.heappush(queue, ((distances[new_des], iroute), new_des))
-    return (distances, route)
+    ans.append(max(dp[n - 1]))
 
-print(dijkstra(graph, start))
+    for i in range(1, n):
+        dp[i][0] = min(dp[i - 1][0], dp[i - 1][1]) + arr[i][0]
+        dp[i][1] = min(dp[i - 1][0], dp[i - 1][1], dp[i - 1][2]) + arr[i][1]
+        dp[i][2] = min(dp[i - 1][1], dp[i - 1][2]) + arr[i][2]
 
-# ans = dijkstra(graph, start)[1]
-# ans.append(end)
+    ans.append(min(dp[n - 1]))
+    return ans
 
-# print(dijkstra(graph, start)[0][end])
-# print(len(ans))
-# print(*ans)
+print(*solve())
