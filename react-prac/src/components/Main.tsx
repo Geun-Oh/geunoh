@@ -1,9 +1,9 @@
-import { RenderTest } from '../../node_modules/y2r/renderDst';
+import Components from "rsnc";
 
 const Main = () => {
     return (
         <>
-            {RenderTest()}
+            <Components.Badge innerText="hello" state="New" width="300px" type="default" />
         </>
     )
 }

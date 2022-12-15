@@ -15,7 +15,8 @@
     "js-yaml": "^4.1.0",
     "node_modules-path": "^2.0.7",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "rsnc": "^0.4.1"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.5",
