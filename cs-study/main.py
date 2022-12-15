@@ -1,33 +1,28 @@
-import sys
+from collections import deque
 
 n = int(input())
-input = sys.stdin.readline
-tree = {}
 
-for i in range(n):
-    root, left, right = input().split()
-    tree[root] = [left, right]
+tree = [[] for i in range(n + 1)]
+for i in range(n - 1):
+    a, b, c = map(int, input().split())
+    tree[a].append((b, c))
 
-def preorder(node):
-    if node != ".":
-        print(node, end="")
-        preorder(tree[node][0])
-        preorder(tree[node][1])
+queue = deque()
+answer = [0] * len(tree[1])
+print(answer)
+for i in tree[1]:
+    a, b = i
+    index = tree[1].index(i)
+    queue.append((a, b, b, index))
 
-def inorder(node):
-    if node != ".":
-        inorder(tree[node][0])
-        print(node, end="")
-        inorder(tree[node][1])
+while queue:
+    node, weight, ans, index = queue.popleft()
+    if tree[node] == []:
+        print(node, ans, index)
+        answer[index] = max(answer[index], ans)
+        continue
+    for i in tree[node]:
+        a, b = i
+        queue.append((a, b, ans + b, index))
 
-def postorder(node):
-    if node != ".":
-        postorder(tree[node][0])
-        postorder(tree[node][1])
-        print(node, end="")
-
-preorder("A")
-print()
-inorder("A")
-print()
-postorder("A")
+print(ans)
