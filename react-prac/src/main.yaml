@@ -10,4 +10,4 @@ Main:
         children:
         - component: Text
           attribute:
-            - innerText: 바뀐 내용입니다.
+            - innerText: 배포 실험
