@@ -1,9 +1,20 @@
-n = int(input())
-a = sorted(list(map(int, input().split())), reverse=True)
-b = sorted(list(map(int, input().split())))
+print("hello!")
 
-ans = 0
-for i in range(n):
-    ans += a[i] * b[i]
 
-print(ans)
+
+# n, m = map(int, input().split())
+# arr = sorted(list(map(int, input().split())))
+
+# l = 0
+# r = n - 1
+# now = (l + r) // 2
+
+# while l >= r:
+#     s = 0
+#     for i in arr:
+#         if i > arr[now]:
+#             s += (i - arr[now])
+#     if s >= m:
+
+#         break
+#     if s < m:
