@@ -1,64 +1,48 @@
 from collections import deque
+import copy
+import sys
 
-n = int(input())
+input = sys.stdin.readline
+case = int(input())
 
-Map = []
-shark = [0, 0]
-sharksize = 2
-sharkate = 0
-sharktime = 0
-for i in range(n):
-    t = list(map(int, input().split()))
-    for j in range(n):
-        if t[j] == 9:
-            shark = [i, j]
-    Map.append(t)
+def sol():
+    node, line = map(int, input().split())
 
-# bfs에서는 최신 지도와 상어의 위치를 받는다.
-def bfs(Map, shark):
+    if node == 1:  # 노드가 하나 뿐이라면 이분 그래프가 아니다.
+        return "NO"
+    if line == 0:  # 노드는 2개 이상이지만 간선이 하나도 없다면 이분 그래프이다.
+        return "YES"
+
+    graph = [[] for k in range(node + 1)]
+    where = [0] * (node + 1)
+    visited = [False] * (node + 1)
+    for j in range(line):
+        a, b = map(int, input().split())
+        graph[a].append(b)
+        graph[b].append(a)
+
     queue = deque()
-    Arr = []
-    visited = [[0] * n for i in range(n)]
-    visited[shark[0]][shark[1]] = 1
-    queue.append((shark[0] + 1, shark[1], 1))
-    queue.append((shark[0] - 1, shark[1], 1))
-    queue.append((shark[0], shark[1] + 1, 1))
-    queue.append((shark[0], shark[1] - 1, 1))
+    visited[1] = True
+    where[1] = "A"
+    for item in graph[1]:
+        queue.append((item, "B"))
     while queue:
-        y, x, distance = queue.popleft()
-        if y <= -1 or y >= n or x <= -1 or x >= n:
-            continue
-        if visited[y][x] == 1:
-            continue
-        visited[y][x] = 1
-        # 상어보다 큰 물고기면 탐색을 멈춘다.
-        if Map[y][x] > sharksize:
-            continue
-        elif Map[y][x] != 0 and Map[y][x] < sharksize:
-            Arr.append([distance, y, x])
-        queue.append((y + 1, x, distance + 1))
-        queue.append((y - 1, x, distance + 1))
-        queue.append((y, x + 1, distance + 1))
-        queue.append((y, x - 1, distance + 1))
-    return Arr
+        x, group = queue.popleft()
+        visited[x] = True
+        where[x] = group
+        for item in graph[x]:
+            if visited[item] == True:  # 이미 방문한 곳이라면
+                if where[x] == where[item]:  # 같은 그룹인지 확인해서 맞으면 끝내기
+                    return "NO"
+                continue  # 아니면 이어가기
+            else:  # 방문한 곳이 아니라면 그룹을 지정해서 큐에 추가하기
+                if group == "A":
+                    queue.append((item, "B"))
+                else:
+                    queue.append((item, "A"))
 
-while True:
-    Arr = bfs(Map, shark)
-    if Arr == []:
-        print(sharktime)
-        break
-    eat = Arr[0]
-    for i in Arr:
-        if i[0] <= eat[0]:
-            if i[1] < eat[1]:
-                eat = i
-            elif i[1] == eat[1]:
-                if i[2] < eat[2]:
-                    eat = i
-    Map[shark[0]][shark[1]] = 0
-    shark = [eat[1], eat[2]]
-    sharktime += eat[0]
-    sharkate += 1
-    if sharkate == sharksize:
-        sharksize += 1
-        sharkate = 0
+    return "YES"
+
+
+for i in range(case):
+    print(sol())
