@@ -1,43 +1,52 @@
+from itertools import combinations
 from collections import deque
 
-case = int(input())
+n = int(input())
+people = list(map(int, input().split()))
+graph = [[] for i in range(n + 1)]
+for i in range(n):
+    a = list(map(int, input().split()))[1:]
+    for k in a:
+        graph[i + 1].append(k)
 
-def sol():
-    func = list(input())
-    n = int(input())
-    arr = input()
-    str_list = []
-    if n > 0:
-        arr = arr.replace('[', "").replace("]", "")
-        str_list = list(map(str, arr.split(',')))
-    queue = deque(str_list)
-    left = True
-    cnt = 0
-    for i in func:
-        if i == "R":
-            cnt += 1
-            if left == True:
-                left = False
-            else:
-                left = True
-        else:
-            if len(queue) == 0:
-                print("error")
-                return
-            else:
-                if left == True:
-                    queue.popleft()
-                else:
-                    queue.pop()
-    
-    arr = list(queue)
-    # if arr == []:
-    #     print("error")
-    #     return
-    if cnt % 2 != 0:
-        arr.reverse()
-    print("["+",".join(map(str, arr))+"]")
-    return
-
-for _ in range(case):
-    sol()
+def get(arr, graph):
+    queue = deque(arr)
+    *a, = arr
+    for i in arr:
+        if graph[i] == []:
+            if len(arr) == 1:
+                return True
+            return False
+    while queue:
+        x = queue.popleft()
+        for k in graph[x]:
+            if k in a:
+                a.remove(k)
+                continue
+            queue.append(k)
+    if a == []:
+        return True
+    return False
+print(get([4], graph))
+pos = []
+for i in range(1, n):
+    l = list(combinations([i for i in range(1, n + 1)], i))
+    for j in l:
+        rev = [i for i in range(1, n + 1) if i not in list(j)]
+        if get(list(j), graph) == True and get(rev, graph) == True:
+            pos.append(list(j))
+ans = 1001
+print(pos)
+m = sum(people)
+for i in pos:
+    a = 0
+    for j in i:
+        a += people[j - 1]
+    b = m - a
+    if abs(a - b) < ans:
+        ans = abs(a - b)
+if pos == []:
+    ans = -1
+if n == 2:
+    ans = abs(people[0] - people[1])
+print(ans)
