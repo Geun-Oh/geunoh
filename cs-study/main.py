@@ -10,24 +10,26 @@ for i in range(n):
         graph[i + 1].append(k)
 
 def get(arr, graph):
-    queue = deque(arr)
+    queue = deque()
     *a, = arr
     for i in arr:
         if graph[i] == []:
             if len(arr) == 1:
                 return True
             return False
+    for i in graph[a[0]]:
+        queue.append(i)
+    a.pop(0)
     while queue:
         x = queue.popleft()
-        for k in graph[x]:
-            if k in a:
-                a.remove(k)
-                continue
-            queue.append(k)
+        if x in a:
+            for k in graph[x]:
+                queue.append(k)
+            a.remove(x)
     if a == []:
         return True
     return False
-print(get([4], graph))
+
 pos = []
 for i in range(1, n):
     l = list(combinations([i for i in range(1, n + 1)], i))
@@ -36,7 +38,6 @@ for i in range(1, n):
         if get(list(j), graph) == True and get(rev, graph) == True:
             pos.append(list(j))
 ans = 1001
-print(pos)
 m = sum(people)
 for i in pos:
     a = 0
