@@ -66,3 +66,20 @@ new Swiper('.promotion .swiper', {
         nextEl: '.promotion .swiper-next'
     }
 });
+
+const promotionEl = document.querySelector('.promotion');
+const promotionToggleBtn = document.querySelector('.toggle-promotion');
+let isHidePromotion = false;
+
+// 숨김, 보임 처리와 같은 간단한 애니메이션 작업의 경우 CSS 조작만을 통해 구현하는 것이 좋다.
+
+promotionToggleBtn.addEventListener('click', () => {
+    isHidePromotion = !isHidePromotion
+    if (isHidePromotion) {
+        // 숨김 처리!
+        promotionEl.classList.add('hide');
+    } else {
+        // 보임 처리!
+        promotionEl.classList.remove('hide');
+    }
+});
