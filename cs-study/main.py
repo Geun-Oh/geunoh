@@ -1,38 +1,37 @@
-import heapq
+v, e = map(int, input().split())
 
-n, m = map(int, input().split())
+def fp(parent, x): 
+    if parent[x] != x:
+        parent[x] = fp(parent, parent[x])
+    return parent[x]
 
-INF = int(1e9)
+def up(parent, a, b):
+    a = fp(parent, a)
+    b = fp(parent, b)
+    if a < b:
+        parent[b] = a
+    else:
+        parent[a] = b
 
-start = int(input())
+parent = [0] * (v + 1)
+for i in range(v):
+    parent[i] = i # 모든 부모를 자신으로 초기화
 
-distance = [INF] * (n + 1)
-distance[start] = 0
-
-graph = [[] for i in range(n + 1)]
-for i in range(m):
+graph = [[] for i in range(v + 1)]
+lines = []
+for i in range(e):
     a, b, c = map(int, input().split())
     graph[a].append((b, c))
+    lines.append((c, a, b))
 
-def djikstra(start):
-    queue = []
-    heapq.heappush(queue, (0, start))
-    
-    while queue:
-        dist, now = heapq.heappop(queue)
+lines.sort()
+ans = 0
 
-        if distance[now] < dist:
-            continue
-        
-        for i in graph[now]:
-            if dist + i[1] < distance[i[0]]:
-                distance[i[0]] = dist + i[1]
-                heapq.heappush(queue, (dist + i[1], i[0]))
+for line in lines:
+    c, a, b = line
+    if fp(parent, a) == fp(parent, b):
+        continue
+    up(parent, a, b)
+    ans += c
 
-djikstra(start)
-
-for i in range(1, n + 1):
-    if distance[i] == INF:
-        print("INF", end = ' ')
-    else:
-        print(distance[i], end = ' ')        
+print(ans)
