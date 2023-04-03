@@ -1,8 +1,9 @@
-interface LineChartOptions {
-    logscale?: boolean;
-    invertedYAxis?: boolean;
-    areaChart?: boolean;
+const checkedFetch: typeof fetch = async (input, init) => {
+    const response = await fetch(input, init)
+    if (!response.ok) {
+        throw new Error("Request failed: " + response.status)
+    }
+    return response
 }
 
-const opts = { logscale: true, title: true };
-const a: LineChartOptions = opts;
+export default {}
